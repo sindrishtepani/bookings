@@ -1,10 +1,11 @@
-package handler
+package handlers
 
 import (
-	"my_mod/pkg/config"
-	"my_mod/pkg/models"
-	"my_mod/pkg/render"
 	"net/http"
+
+	"github.com/sindrishtepani/bookings/pkg/config"
+	"github.com/sindrishtepani/bookings/pkg/models"
+	"github.com/sindrishtepani/bookings/pkg/render"
 )
 
 var Repo *Repository

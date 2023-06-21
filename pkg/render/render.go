@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"html/template"
 	"log"
-	"my_mod/pkg/config"
-	"my_mod/pkg/models"
 	"net/http"
 	"path/filepath"
+
+	"github.com/sindrishtepani/bookings/pkg/config"
+	"github.com/sindrishtepani/bookings/pkg/models"
 )
 
 var functions = template.FuncMap{}

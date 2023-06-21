@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
-	"my_mod/pkg/config"
-	handler "my_mod/pkg/handlers"
-	"my_mod/pkg/render"
 	"net/http"
 	"time"
+
+	"github.com/sindrishtepani/bookings/pkg/config"
+	"github.com/sindrishtepani/bookings/pkg/handlers"
+	"github.com/sindrishtepani/bookings/pkg/render"
 
 	"github.com/alexedwards/scs/v2"
 )
@@ -35,8 +36,8 @@ func main() {
 	app.TemplateCache = tc
 	app.UseCache = false
 
-	repo := handler.NewRepo(&app)
-	handler.NewHandler(repo)
+	repo := handlers.NewRepo(&app)
+	handlers.NewHandler(repo)
 
 	render.NewTemplates(&app)
 	fmt.Print("Starting application on port", portNumber)

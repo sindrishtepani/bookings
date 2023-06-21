@@ -1,9 +1,10 @@
 package main
 
 import (
-	"my_mod/pkg/config"
-	handler "my_mod/pkg/handlers"
 	"net/http"
+
+	"github.com/sindrishtepani/bookings/pkg/config"
+	"github.com/sindrishtepani/bookings/pkg/handlers"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -16,8 +17,8 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 
-	mux.Get("/", handler.Repo.Home)
-	mux.Get("/about", handler.Repo.About)
+	mux.Get("/", handlers.Repo.Home)
+	mux.Get("/about", handlers.Repo.About)
 
 	return mux
 }
