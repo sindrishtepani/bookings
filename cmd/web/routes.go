@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/sindrishtepani/bookings/pkg/config"
-	"github.com/sindrishtepani/bookings/pkg/handlers"
+	"github.com/sindrishtepani/bookings/internal/config"
+	"github.com/sindrishtepani/bookings/internal/handlers"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -21,7 +21,11 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/about", handlers.Repo.About)
 	mux.Get("/generals-quarters", handlers.Repo.Generals)
 	mux.Get("/majors-suite", handlers.Repo.Majors)
+
 	mux.Get("/search", handlers.Repo.Availability)
+	mux.Post("/search", handlers.Repo.PostAvailability)
+	mux.Post("/search-json", handlers.Repo.AvailabilityJSON)
+
 	mux.Get("/contact", handlers.Repo.Contact)
 
 	mux.Get("/make-reservation", handlers.Repo.Reservation)
