@@ -11,6 +11,7 @@
       <h1 class="">Search for Avalibility</h1>
 
       <form action="/search" method="post" novalidate class="needs-validation">
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
         <div class="row">
           <div class="col">
             <div class="row" id="reservation-dates">
