@@ -21,6 +21,24 @@ var app config.AppConfig
 var session *scs.SessionManager
 
 func main() {
+	err := run()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Print("Starting application on port", portNumber)
+
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+
+	err = srv.ListenAndServe()
+	log.Fatal(err)
+}
+
+func run() error {
 	gob.Register(models.Reservation{})
 
 	// change this to true when in production
@@ -32,12 +50,15 @@ func main() {
 	session.Cookie.SameSite = http.SameSiteLaxMode
 	session.Cookie.Secure = app.InProduction
 
+	app.Session = session
+
 	tc, err := render.CreateTemplateCache()
+
 	if err != nil {
 		log.Fatal("cannot create template cache")
+		return err
 	}
 
-	app.Session = session
 	app.TemplateCache = tc
 	app.UseCache = false
 
@@ -45,13 +66,6 @@ func main() {
 	handlers.NewHandler(repo)
 
 	render.NewTemplates(&app)
-	fmt.Print("Starting application on port", portNumber)
 
-	srv := &http.Server{
-		Addr:    portNumber,
-		Handler: routes(&app),
-	}
-
-	err = srv.ListenAndServe()
-	log.Fatal(err)
+	return nil
 }
