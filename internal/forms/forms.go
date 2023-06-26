@@ -2,7 +2,6 @@ package forms
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
 	"strings"
 
@@ -25,10 +24,10 @@ func New(data url.Values) *Form {
 }
 
 // Has checks if form has a specific field
-func (f *Form) Has(field string, r *http.Request) bool {
-	x := r.Form.Get(field)
-
+func (f *Form) Has(field string) bool {
+	x := f.Values.Get(field)
 	if x == "" {
+		f.Errors.Add(field, "Does not exist in form")
 		return false
 	}
 
@@ -52,8 +51,8 @@ func (f *Form) Required(fields ...string) {
 }
 
 // MinLength checks for string minium length
-func (f *Form) MinLength(field string, length int, r *http.Request) bool {
-	x := r.Form.Get(field)
+func (f *Form) MinLength(field string, length int) bool {
+	x := f.Values.Get(field)
 
 	if len(x) < length {
 		f.Errors.Add(field, fmt.Sprintf("This field must be at least %d chars long", length))
