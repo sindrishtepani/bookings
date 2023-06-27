@@ -1,3 +1,4 @@
 cmd/**/*.out
 internal/**/*.out
 bookings
+database.yml
