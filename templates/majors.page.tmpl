@@ -46,27 +46,11 @@
 {{define "js"}}
 
 <script>
-  let button = document
-    .getElementById("check-availability-button")
-    .addEventListener("click", function () {
-      let html = `
-      <form id="check-avail-form" action="" method="post" novalidate class="needs-validation">
-        <div class="row">
-          <div class="col">
-            <div class="row" id="reservation-dates-modal">
-              <div class="col">
-                <input disabled required class="form-control" type="text" name="start" id="start" placeholder="Arrival">
-              </div>
-              <div class="col">
-                <input disabled required class="form-control" type="text" name="end" id="end" placeholder="Departure">
-              </div>
-            </div>
-          </div>
-        </div>
-      </form
-      `;
+  let bookNow = BookNowModal();
 
-      attention.custom({ msg: html, title: "Choose your dates" });
-    });
+  bookNow.showForm({
+    roomID: bookNow.ROOM_MAJORS_SUIITE,
+    CSRFToken: "{{ .CSRFToken }}",
+  });
 </script>
 {{ end }}
