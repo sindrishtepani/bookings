@@ -12,6 +12,11 @@ type postgresDBRepo struct {
 	DB  *sql.DB
 }
 
+type testDBRepo struct {
+	App *config.AppConfig
+	DB  *sql.DB
+}
+
 func NewPostgresRepo(conn *sql.DB, a *config.AppConfig) repository.DataseRepo {
 	return &postgresDBRepo{
 		App: a,
@@ -21,4 +26,10 @@ func NewPostgresRepo(conn *sql.DB, a *config.AppConfig) repository.DataseRepo {
 
 func NewMySQLRepo(conn *sql.DB, a *config.AppConfig) {
 	//return &
+}
+
+func NewTestingRepo(a *config.AppConfig) repository.DataseRepo {
+	return &testDBRepo{
+		App: a,
+	}
 }
