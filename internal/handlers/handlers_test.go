@@ -14,11 +14,6 @@ import (
 	"github.com/sindrishtepani/bookings/internal/models"
 )
 
-type postData struct {
-	key   string
-	value string
-}
-
 type theTest struct {
 	name               string
 	url                string
