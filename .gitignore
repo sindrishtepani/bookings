@@ -3,3 +3,4 @@ internal/**/*.out
 bookings
 database.yml
 *.json
+node_modules/*
