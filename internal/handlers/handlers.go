@@ -102,7 +102,6 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := r.ParseForm()
-
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "can't parse form")
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -189,7 +188,6 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	m.App.MailChan <- msg
 
 	m.App.Session.Put(r.Context(), "reservation", reservation)
-
 	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 }
 
@@ -277,7 +275,7 @@ func (m *Repository) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 		// can't parse form, so return appropriate json
 		resp := jsonResponse{
 			OK:      false,
-			Message: "Internal server error",
+			Message: "Internal Server Error",
 		}
 
 		out, _ := json.MarshalIndent(resp, "", "     ")
@@ -300,7 +298,7 @@ func (m *Repository) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		resp := jsonResponse{
 			OK:      false,
-			Message: "Error connecting to database",
+			Message: "Error querying database",
 		}
 
 		out, _ := json.MarshalIndent(resp, "", "     ")

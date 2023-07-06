@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -169,51 +170,6 @@ var postReservationTests = []struct {
 		expectedLocation:     "/",
 	},
 	{
-		name: "invalid-start-date",
-		postedData: url.Values{
-			"start_date": {"invalid"},
-			"end_date":   {"2050-01-02"},
-			"first_name": {"John"},
-			"last_name":  {"Smith"},
-			"email":      {"john@smith.com"},
-			"phone":      {"555-555-5555"},
-			"room_id":    {"1"},
-		},
-		expectedResponseCode: http.StatusSeeOther,
-		expectedHTML:         "",
-		expectedLocation:     "/",
-	},
-	{
-		name: "invalid-end-date",
-		postedData: url.Values{
-			"start_date": {"2050-01-01"},
-			"end_date":   {"end"},
-			"first_name": {"John"},
-			"last_name":  {"Smith"},
-			"email":      {"john@smith.com"},
-			"phone":      {"555-555-5555"},
-			"room_id":    {"1"},
-		},
-		expectedResponseCode: http.StatusSeeOther,
-		expectedHTML:         "",
-		expectedLocation:     "/",
-	},
-	{
-		name: "invalid-room-id",
-		postedData: url.Values{
-			"start_date": {"2050-01-01"},
-			"end_date":   {"2050-01-02"},
-			"first_name": {"John"},
-			"last_name":  {"Smith"},
-			"email":      {"john@smith.com"},
-			"phone":      {"555-555-5555"},
-			"room_id":    {"invalid"},
-		},
-		expectedResponseCode: http.StatusSeeOther,
-		expectedHTML:         "",
-		expectedLocation:     "/",
-	},
-	{
 		name: "invalid-data",
 		postedData: url.Values{
 			"start_date": {"2050-01-01"},
@@ -252,7 +208,7 @@ var postReservationTests = []struct {
 			"last_name":  {"Smith"},
 			"email":      {"john@smith.com"},
 			"phone":      {"555-555-5555"},
-			"room_id":    {"1000"},
+			"room_id":    {"99"},
 		},
 		expectedResponseCode: http.StatusSeeOther,
 		expectedHTML:         "",
@@ -268,15 +224,30 @@ func TestPostReservation(t *testing.T) {
 			req, _ = http.NewRequest("POST", "/make-reservation", strings.NewReader(e.postedData.Encode()))
 		} else {
 			req, _ = http.NewRequest("POST", "/make-reservation", nil)
-
 		}
+
 		ctx := getCtx(req)
 		req = req.WithContext(ctx)
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 		rr := httptest.NewRecorder()
-
 		handler := http.HandlerFunc(Repo.PostReservation)
+
+		startDate, _ := time.Parse("2006-01-02", e.postedData.Get("start_date"))
+		endDate, _ := time.Parse("2006-01-02", e.postedData.Get("end_date"))
+		roomID, _ := strconv.Atoi(e.postedData.Get("room_id"))
+
+		testReservation := models.Reservation{
+			ID:        0,
+			StartDate: startDate,
+			EndDate:   endDate,
+			FirstName: e.postedData.Get("first_name"),
+			LastName:  e.postedData.Get("last_name"),
+			Email:     e.postedData.Get("email"),
+			Phone:     e.postedData.Get("phone"),
+			RoomID:    roomID,
+		}
+		app.Session.Put(req.Context(), "reservation", testReservation)
 
 		handler.ServeHTTP(rr, req)
 
@@ -299,7 +270,6 @@ func TestPostReservation(t *testing.T) {
 				t.Errorf("failed %s: expected to find %s but did not", e.name, e.expectedHTML)
 			}
 		}
-
 	}
 }
 
@@ -322,7 +292,7 @@ var testAvailabilityJSONData = []struct {
 	{
 		name: "rooms not available",
 		postedData: url.Values{
-			"start":   {"2050-01-01"},
+			"start":   {"2050-01-10"},
 			"end":     {"2050-01-02"},
 			"room_id": {"1"},
 		},
@@ -345,7 +315,7 @@ var testAvailabilityJSONData = []struct {
 	{
 		name: "database query fails",
 		postedData: url.Values{
-			"start":   {"2060-01-01"},
+			"start":   {"2060-01-10"},
 			"end":     {"2060-01-02"},
 			"room_id": {"1"},
 		},
@@ -756,7 +726,7 @@ var adminPostShowReservationTests = []struct {
 			"month":      {"01"},
 		},
 		expectedResponseCode: http.StatusSeeOther,
-		expectedLocation:     "/admin/reservations-calendar?y=2022&m=01",
+		expectedLocation:     "/admin/reservations-calendar?m=01&y=2022",
 		expectedHTML:         "",
 	},
 }

@@ -30,7 +30,7 @@ func (m *testDBRepo) InsertRoomRestriction(r models.RoomRestriction) error {
 // HasAvailabilityByDatesByRoomID returns true if availability exists and false if it doesn't
 func (m *testDBRepo) HasAvailabilityByDatesByRoomID(start, end time.Time, roomID int) (bool, error) {
 	if start.After(end) {
-		return false, errors.New("failing bc roomID == 99")
+		return false, errors.New("failing bc start date after end date")
 	}
 	return true, nil
 }
